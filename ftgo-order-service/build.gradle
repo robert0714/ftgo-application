@@ -8,15 +8,14 @@ buildscript {
         }
     }
     dependencies {
-        classpath "io.spring.gradle:dependency-management-plugin:$springDependencyManagementPluginVersion"
         classpath "org.springframework.cloud:spring-cloud-contract-gradle-plugin:$springCloudContractDependenciesVersion"
         classpath "com.avast.gradle:gradle-docker-compose-plugin:$dockerComposePluginVersion"
         classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.8'
     }
 }
 
-apply plugin: 'org.springframework.boot'
-apply plugin: "io.spring.dependency-management"
+apply plugin: FtgoServicePlugin
+
 apply plugin: 'spring-cloud-contract'
 apply plugin: 'docker-compose'
 apply plugin: 'com.google.protobuf'
@@ -27,7 +26,6 @@ apply plugin: ComponentTestsPlugin
 dependencyManagement {
     imports {
         mavenBom "org.springframework.cloud:spring-cloud-contract-dependencies:$springCloudContractDependenciesVersion"
-        mavenBom "org.springframework.cloud:spring-cloud-sleuth:$springCloudSleuthVersion"
     }
 }
 
@@ -108,16 +106,13 @@ idea {
 dependencies {
 
 
-    compile 'org.springframework.cloud:spring-cloud-starter-sleuth'
-    compile 'org.springframework.cloud:spring-cloud-starter-zipkin'
-    compile 'io.zipkin.brave:brave-bom:4.17.1'
-
     compile project(":common-swagger")
     compile project(":ftgo-common-jpa")
 
     compile "io.eventuate.tram.core:eventuate-tram-aggregate-domain-events:$eventuateTramVersion"
     compile "io.eventuate.tram.core:eventuate-tram-jdbc-kafka:$eventuateTramVersion"
     compile "io.eventuate.tram.core:eventuate-tram-commands:$eventuateTramVersion"
+
     compile "io.eventuate.tram.sagas:eventuate-tram-sagas-simple-dsl:$eventuateTramSagasVersion"
 
     compile project(":ftgo-accounting-service-api")
@@ -144,6 +139,7 @@ dependencies {
 
     // Added this stuff
 
+
     testCompile project(":ftgo-consumer-service-contracts")
     testCompile project(":ftgo-kitchen-service-contracts")
     testCompile project(":ftgo-accounting-service-contracts")
@@ -163,6 +159,3 @@ dependencies {
     testCompile project(":ftgo-test-util")
 
 }
-
-
-
