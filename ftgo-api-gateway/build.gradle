@@ -57,7 +57,7 @@ dependencies {
 
     testCompile "org.springframework.boot:spring-boot-starter-test"
     testCompile "junit:junit:4.12"
-    testCompile "net.chrisrichardson.ftgo:ftgo-order-service-contracts:unspecified:stubs"
+    testCompile project(":ftgo-order-service-contracts")
     testCompile "org.springframework.cloud:spring-cloud-contract-wiremock"
     testCompile "org.springframework.cloud:spring-cloud-starter-contract-stub-runner"
 

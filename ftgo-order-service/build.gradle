@@ -11,7 +11,7 @@ buildscript {
         classpath "io.spring.gradle:dependency-management-plugin:$springDependencyManagementPluginVersion"
         classpath "org.springframework.cloud:spring-cloud-contract-gradle-plugin:$springCloudContractDependenciesVersion"
         classpath "com.avast.gradle:gradle-docker-compose-plugin:$dockerComposePluginVersion"
-        classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.0'
+        classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.8'
     }
 }
 
@@ -32,7 +32,7 @@ dependencyManagement {
 }
 
 contracts {
-    contractsDslDir = new File("../ftgo-order-service-contracts/src/main/resources/contracts")
+    contractsDslDir = file ( "../ftgo-order-service-contracts/src/main/resources/contracts")
     packageWithBaseClasses = 'net.chrisrichardson.ftgo.orderservice.contract'
     generatedTestSourcesDir = project.file("${project.buildDir}/generated-integration-test-sources/contracts")
 }
@@ -143,10 +143,10 @@ dependencies {
     testCompile "org.springframework.boot:spring-boot-starter-test:$springBootVersion"
 
     // Added this stuff
-    
-    testCompile "net.chrisrichardson.ftgo:ftgo-accounting-service-contracts:unspecified:stubs"
-    testCompile "net.chrisrichardson.ftgo:ftgo-consumer-service-contracts:unspecified:stubs"
-    testCompile "net.chrisrichardson.ftgo:ftgo-kitchen-service-contracts:unspecified:stubs"
+
+    testCompile project(":ftgo-consumer-service-contracts")
+    testCompile project(":ftgo-kitchen-service-contracts")
+    testCompile project(":ftgo-accounting-service-contracts")
     testCompile "org.springframework.cloud:spring-cloud-contract-wiremock"
     testCompile "org.springframework.cloud:spring-cloud-starter-contract-stub-runner"
     testCompile 'io.rest-assured:rest-assured:3.0.6'
