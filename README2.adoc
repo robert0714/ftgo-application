@@ -1,0 +1,122 @@
+= FTGO example application
+
+This is the example code for my book https://www.manning.com/books/microservice-patterns[Microservice patterns].
+
+
+== Other References
+https://eventuate.io/whyeventdriven.html
+https://github.com/eventuate-tram/eventuate-tram-sagas
+https://github.com/eventuate-tram/eventuate-tram-core
+
+== Building and running the application
+
+=== Pre-requisites
+
+* Java 8+
+* Docker and Docker Compose
+* Internet access so that Gradle and Docker can download dependencies and container images
+
+=== Building
+
+Temporary: Build the Spring Cloud Contracts using this command:
+
+```
+./build-contracts.sh
+```
+
+Build the services using this command:
+
+```
+./gradlew assemble
+```
+
+=== Setting environment variables
+
+
+==== Quick way
+
+A quick way to set the environment variables is to run the script `./set-env.sh`
+
+==== Long way
+
+To run the application you must set the `DOCKER_HOST_IP` environment variable to the IP address of where the Docker containers are running:
+
+* Docker toolbox/Virtual machine - IP address of the virtual machine
+* Docker for Windows/Mac/Linux - IP address of your laptop/desktop
+
+The value of `DOCKER_HOST_IP` must be meaningful to both Java services/tests running on your desktop/laptop and to Docker containers.
+Please do NOT set it to the unresolvable hostname of your machine, `localhost` or `127.0.0.1` since the Docker containers will probably not work correctly.
+
+=== Verifying that DOCKER_HOST_IP is set correctly
+
+You can verify that `DOCKER_HOST_IP` is set correctly by running this command:
+
+----
+docker run -p 8889:8888 -e DOCKER_DIAGNOSTICS_PORT=8889 -e DOCKER_HOST_IP \
+     --rm eventuateio/eventuateio-docker-networking-diagnostics:0.2.0.RELEASE
+----
+
+==== Setting the environment variable in your IDE
+
+If you want to run Java services/tests within your IDE on your desktop/laptop AND  the Docker containers are not accessible via `localhost` THEN you will need to set `DOCKER_HOST_IP` within your IDE.
+How to do this depends on your operating system and IDE.
+For example, I find it convenient to launch my IDE from the command line and after setting this environment variable.
+
+
+=== Running the application
+
+Run the application using this command:
+
+```
+docker-compose up -d
+```
+
+This can take a while.
+
+=== Using the application
+
+Use the services Swagger UIs to invoke the services.
+
+* Create consumer - `http://${DOCKER_HOST_IP?}:8081/swagger-ui.html`
+* Create a restaurant - `http://${DOCKER_HOST_IP?}:8084/swagger-ui.html`
+* Create an order - `http://${DOCKER_HOST_IP?}:8082/swagger-ui.html`
+* View the order - `http://${DOCKER_HOST_IP?}:8082/swagger-ui.html`
+* View the order history -  `http://${DOCKER_HOST_IP?}:8086/swagger-ui.html`
+
+You can also access the application via the `API Gateway` at `http://${DOCKER_HOST_IP?}:8087`.
+However, currently it  doesn't have a Swagger UI so you will have to use `curl`, for example.
+
+=== Stopping the application
+
+Stop the application using this command:
+
+```
+docker-compose down -v
+```
+
+== Deploying the application on Kubernetes
+
+You can find Kubernetes YAML files in the following directories: `deployment/kubernetes` and `*/src/deployment/kubernetes`.
+There are also some helpful shell scripts.
+
+=== Deploying services
+
+You can run this command
+
+```
+./deployment/kubernetes/scripts/kubernetes-deploy-all.sh
+```
+
+=== Undeploying the services
+
+You can run the script to undeploy the services:
+
+```
+./deployment/kubernetes/scripts/kubernetes-delete-all.sh
+```
+
+If you want to delete the persistent volumes for Apache Kafka, Zookeeper and MySQL please run the command:
+
+```
+./deployment/kubernetes/scripts/kubernetes-delete-volumes.sh
+```
