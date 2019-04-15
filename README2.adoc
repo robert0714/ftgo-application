@@ -8,6 +8,11 @@ https://eventuate.io/whyeventdriven.html
 https://github.com/eventuate-tram/eventuate-tram-sagas
 https://github.com/eventuate-tram/eventuate-tram-core
 
+### Requirements
+
+- Gradle (v4.10)
+- JDK (1.8+)
+
 == Building and running the application
 
 === Pre-requisites
